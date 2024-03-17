@@ -7,9 +7,9 @@ phases:
       - echo "Zipping deployment packages..."
       - cd mock_data_generator
       - zip -r9 ../deployment_package_airbnb_data_generator.zip lambda_function.py
-      - cd filter_airbnb_data
+      - cd ../filter_airbnb_data
       - zip -r9 ../deployment_package_airbnb_filter_data.zip lambda_function.py
-      - cd write_processed_data
+      - cd ../write_processed_data
       - zip -r9 ../deployment_package_airbnb_write_data.zip lambda_function.py
       - cd ..
   post_build:
