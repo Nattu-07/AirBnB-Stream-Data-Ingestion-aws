@@ -1,0 +1,21 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Zipping deployment packages..."
+      - zip -r9 deployment_package_airbnb_data_generator.zip mock_data_generator/lambda_function.py
+      - zip -r9 deployment_package_airbnb_filter_data.zip filter_airbnb_data/lambda_function.py
+      - zip -r9 deployment_package_airbnb_write_data.zip write_processed_data/lambda_function.py
+  post_build:
+    commands:
+      - echo "Uploading to S3..."
+      - aws s3 cp deployment_package_airbnb_data_generator.zip s3://aws-de-bootcamp-na/code_pipeline/
+      - aws s3 cp deployment_package_airbnb_filter_data.zip s3://aws-de-bootcamp-na/code_pipeline/
+      - aws s3 cp deployment_package_airbnb_write_data.zip s3://aws-de-bootcamp-na/code_pipeline/
+      - echo "Updating Lambda function via S3..."
+      - aws lambda update-function-code --function-name ProduceAirbnbBookingData --s3-bucket aws-de-bootcamp-na --s3-key code_pipeline/deployment_package_airbnb_data_generator.zip
+      - aws lambda update-function-code --function-name FilterAirbnbBookingData --s3-bucket aws-de-bootcamp-na --s3-key code_pipeline/deployment_package_airbnb_filter_data.zip
+      - aws lambda update-function-code --function-name ProcessFilteredBookings --s3-bucket aws-de-bootcamp-na --s3-key code_pipeline/deployment_package_airbnb_write_data.zip
+      - echo "Deployment complete!"
