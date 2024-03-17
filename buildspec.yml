@@ -5,9 +5,13 @@ phases:
       python: 3.11
     commands:
       - echo "Zipping deployment packages..."
-      - zip -r9 deployment_package_airbnb_data_generator.zip mock_data_generator/lambda_function.py
-      - zip -r9 deployment_package_airbnb_filter_data.zip filter_airbnb_data/lambda_function.py
-      - zip -r9 deployment_package_airbnb_write_data.zip write_processed_data/lambda_function.py
+      - cd mock_data_generator
+      - zip -r9 ../deployment_package_airbnb_data_generator.zip lambda_function.py
+      - cd filter_airbnb_data
+      - zip -r9 ../deployment_package_airbnb_filter_data.zip lambda_function.py
+      - cd write_processed_data
+      - zip -r9 ../deployment_package_airbnb_write_data.zip lambda_function.py
+      - cd ..
   post_build:
     commands:
       - echo "Uploading to S3..."
